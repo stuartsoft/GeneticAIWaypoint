@@ -5,6 +5,8 @@
 object GAWaypointCreator extends App{
 
   override def main(args: Array[String]): Unit = {
+    print("Creating graphs...")
+
     val g: Graph = new Graph
     val n1: g.Node = g.newNode
     val n2: g.Node = g.newNode
