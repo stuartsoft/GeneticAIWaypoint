@@ -8,11 +8,9 @@ object GAWaypointCreator extends App{
     print("Creating graphs...")
 
     val g: Graph = new Graph
-    val n1: g.Node = g.newNode
-    val n2: g.Node = g.newNode
-    n1.connectTo(n2)      // legal
-    val h: Graph = new Graph
-    val n3: h.Node = h.newNode
-    n1.connectTo(n3)      // illegal!
+    val n1: g.Node = g.newNode(0,0)
+    val n2: g.Node = g.newNode(1,1)
+    n1.connectTo(n2)
+    g.printAdjMatrix()
   }
 }
