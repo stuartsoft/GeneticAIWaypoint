@@ -11,6 +11,7 @@ object GAWaypointCreator extends App{
     val n1: g.Node = g.newNode(0,0)
     val n2: g.Node = g.newNode(1,1)
     n1.connectTo(n2)
+    //g.removeNode(1)
     g.printAdjMatrix()
   }
 }

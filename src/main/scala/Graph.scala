@@ -1,43 +1,55 @@
+import scala.collection.mutable.ListBuffer
+
 /**
   * Created by BOWMANRS1 on 2/17/2016.
   */
 class Graph {
 
-  var nodes: List[Node] = Nil
+  var nodes = Map[Int, Node]()
 
-  class Node(x: Int, y: Int, var ID: Int){
+  class Node(x: Float, y: Float, var ID: Int){
     //constructor with xy position
-    var connectedNodes: List[Graph#Node] = Nil
+    var connectedNodes = new ListBuffer[Graph#Node]()
     var pos = (x,y)
 
     def connectTo(node: Graph#Node): Unit ={
-      if (connectedNodes.find(node.equals).isEmpty){
-        connectedNodes = node :: connectedNodes //append the node to the list of connected nodes
+      if (!connectedNodes.contains(node)){
+        connectedNodes += node //append the node to the list of connected nodes
         if (node.connectedNodes.find(this.equals).isEmpty){
-          node.connectedNodes = this :: node.connectedNodes //also append this to the other list of connected nodes
+          node.connectedNodes += this //also append this to the other list of connected nodes
         }
       }
-    }
 
+    }
   }
 
   def printAdjMatrix(): Unit = {
-    for (n <- nodes){
-      print("\nNode "+ n.ID + " is connected to\n")
-      n.connectedNodes.foreach((mynode)=>print(mynode.ID + " "))
+    nodes.foreach{ case (key, value) =>
+      print("\nNode "+ value.ID + " is connected to\n")
+      value.connectedNodes.foreach((mynode)=>print(mynode.ID + " "))
     }
   }
 
   def newNode(x: Int, y: Int): Node = {
     var topID: Int = 0
-    for (n <- nodes){
-      if (n.ID >= topID)
-        topID = n.ID
+    nodes.foreach{ case (key, value) =>
+      if (value.ID >= topID)
+        topID = value.ID
     }
 
     val res = new Node(x, y, topID+1)
-    nodes = res :: nodes
+    nodes += (topID+1 -> res)//add new node to the Map
     res
+  }
+
+  def removeNode(id: Int) = {
+    nodes = nodes.filterKeys(_!=id)//Filter out the node from the Map
+    //remove any connections to this node
+    nodes.foreach{
+      case (key, value) =>
+        value.connectedNodes = value.connectedNodes
+          .filter(tempnode => tempnode.ID != id)
+    }
   }
 
 }
