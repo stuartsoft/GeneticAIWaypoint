@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
   */
 class Graph {
 
-  var nodes = Map[Int, Node]()
+  var nodes = Map[Int, Node]()  //an empty hash map for nodes. Maps the node ID to node object for easy lookup
 
   class Node(x: Float, y: Float, var ID: Int){
     //constructor with xy position
