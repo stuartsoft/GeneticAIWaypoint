@@ -3,9 +3,13 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by BOWMANRS1 on 2/17/2016.
   */
-class Graph {
+class Graph(initialNodes: Int, val wid: Float, val height: Float) {
 
   var nodes = Map[Int, Node]()  //an empty hash map for nodes. Maps the node ID to node object for easy lookup
+
+  for(i <- Range(1, initialNodes)) {
+    newRandomNode()
+  }
 
   class Node(x: Float, y: Float, var ID: Int){
     //constructor with xy position
@@ -25,12 +29,12 @@ class Graph {
 
   def printAdjMatrix(): Unit = {
     nodes.foreach{ case (key, value) =>
-      print("\nNode "+ value.ID + " is connected to\n")
+      print("\nNode "+ value.ID + value.pos + " is connected to\n")
       value.connectedNodes.foreach((mynode)=>print(mynode.ID + " "))
     }
   }
 
-  def newNode(x: Int, y: Int): Node = {
+  def newNode(x: Float, y: Float): Node = {
     var topID: Int = 0
     nodes.foreach{ case (key, value) =>
       if (value.ID >= topID)
@@ -40,6 +44,11 @@ class Graph {
     val res = new Node(x, y, topID+1)
     nodes += (topID+1 -> res)//add new node to the Map
     res
+  }
+
+  def newRandomNode(): Node = {
+    val r = scala.util.Random;
+    newNode(r.nextFloat()*wid, r.nextFloat()*height)
   }
 
   def removeNode(id: Int) = {
