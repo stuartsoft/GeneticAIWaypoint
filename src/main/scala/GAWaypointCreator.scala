@@ -8,10 +8,11 @@ object GAWaypointCreator extends App{
     print("Creating graphs...")
 
     val g: Graph = new Graph(50, 50, 50)
+    val m = new Maze("src/main/resources/maze1.txt")
     //val n1: g.Node = g.newNode(0,0)
     //val n2: g.Node = g.newNode(1,1)
     //n1.connectTo(n2)
     //g.removeNode(1)
-    g.printAdjMatrix()
+    //g.printAdjMatrix()
   }
 }
