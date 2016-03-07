@@ -8,10 +8,6 @@ class Maze(var fname: String) {
   var blocks = ListBuffer[ListBuffer[Boolean]]()
   for (line <- Source.fromFile(fname).getLines()){
     var row = ListBuffer[Boolean]()
-    line.foreach(
-      c => row += (c.equals('#'))
-    )
-    blocks += row
-  }
-
+    line.foreach(c => row += (c.equals('#')))
+    blocks += row}
 }

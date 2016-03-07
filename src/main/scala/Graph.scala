@@ -1,15 +1,19 @@
 import scala.collection.mutable.ListBuffer
-
+import scala.math
 /**
   * Created by BOWMANRS1 on 2/17/2016.
   */
-class Graph(initialNodes: Int, val wid: Float, val height: Float) {
+class Graph(initialNodes: Int) {
 
   var nodes = Map[Int, Node]()  //an empty hash map for nodes. Maps the node ID to node object for easy lookup
+  var maze = new Maze("src/main/resources/maze1.txt")
+  val wid = maze.blocks.size
+  val height = maze.blocks(0).size
 
-  for(i <- Range(1, initialNodes)) {
+  for(i <- Range(0, initialNodes)) {
     newRandomNode()
   }
+  connectVisibleNodes()
 
   class Node(x: Float, y: Float, var ID: Int){
     //constructor with xy position
@@ -23,14 +27,15 @@ class Graph(initialNodes: Int, val wid: Float, val height: Float) {
           node.connectedNodes += this //also append this to the other list of connected nodes
         }
       }
-
     }
   }
 
   def printAdjMatrix(): Unit = {
     nodes.foreach{ case (key, value) =>
-      print("\nNode "+ value.ID + value.pos + " is connected to\n")
-      value.connectedNodes.foreach((mynode)=>print(mynode.ID + " "))
+      if (value.connectedNodes.size > 0) {
+        print("\nNode " + value.ID + value.pos + " is connected to\n")
+        value.connectedNodes.foreach((mynode) => print(mynode.ID + " "))
+      }
     }
   }
 
@@ -59,6 +64,104 @@ class Graph(initialNodes: Int, val wid: Float, val height: Float) {
         value.connectedNodes = value.connectedNodes
           .filter(tempnode => tempnode.ID != id)
     }
+  }
+
+  def connectVisibleNodes(): Unit ={
+    nodes.foreach{
+      case (key, value) => {
+        nodes.foreach{
+          case (key2, value2) => {
+            if (!value.equals(value2)){
+              val v1 = (value.pos._1.toInt, value.pos._2.toInt)
+              val v2 = (value2.pos._1.toInt, value2.pos._2.toInt)
+              if (checkLineOfSight(v1._1, v1._2, v2._1, v2._2)){
+                value.connectTo(value2)
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  def printLineOfSight(x1:Float, y1:Float, x2:Float, y2:Float) = {
+    val len = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1))
+    val dir = ((x2-x1)/len, (y2-y1)/len)
+
+    var x: Double = x1
+    var y: Double = y1
+
+    if (x1 < x2 && y1 < y2){
+      while(x <= x2 && y <= y2){
+        println(maze.blocks(x.toInt)(y.toInt))
+        y += dir._2
+        x += dir._1
+      }
+    }
+    else if (x1 <= x2 && y1 >= y2){
+      while(x <= x2 && y >= y2){
+        println(maze.blocks(x.toInt)(y.toInt))
+        y += dir._2
+        x += dir._1
+      }
+    }
+    else if (x1 >= x2 && y1 <= y2){
+      while(x >= x2 && y <= y2){
+        println(maze.blocks(x.toInt)(y.toInt))
+        y += dir._2
+        x += dir._1
+      }
+    }
+    else{
+      while(x >= x2 && y >= y2){
+        println(maze.blocks(x.toInt)(y.toInt))
+        y += dir._2
+        x += dir._1
+      }
+    }
+  }
+
+  def checkLineOfSight(x1:Float, y1:Float, x2:Float, y2:Float):Boolean = {
+    val len = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1))
+    val dir = ((x2-x1)/len, (y2-y1)/len)
+
+    var x: Double = x1
+    var y: Double = y1
+    if (maze.blocks(x.toInt)(y.toInt)==true) return false
+    if (maze.blocks(x2.toInt)(y2.toInt)==true) return false
+
+    if (x1 <= x2 && y1 <= y2){
+      while(x <= x2 && y <= y2){
+        if (maze.blocks(x.toInt)(y.toInt)==true) return false
+        y += dir._2
+        x += dir._1
+      }
+    }
+    else if (x1 <= x2 && y1 >= y2){
+      while(x <= x2 && y >= y2){
+        if (maze.blocks(x.toInt)(y.toInt)==true) return false
+        y += dir._2
+        x += dir._1
+      }
+    }
+    else if (x1 >= x2 && y1 <= y2){
+      while(x >= x2 && y <= y2){
+        if (maze.blocks(x.toInt)(y.toInt)==true) return false
+        y += dir._2
+        x += dir._1
+      }
+    }
+    else {
+      while(x >= x2 && y >= y2){
+        if (maze.blocks(x.toInt)(y.toInt)==true) return false
+        y += dir._2
+        x += dir._1
+      }
+    }
+
+    if (maze.blocks(x2.toInt)(y2.toInt)==true) return false
+
+    return true
   }
 
 }

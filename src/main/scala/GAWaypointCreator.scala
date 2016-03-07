@@ -5,14 +5,15 @@
 object GAWaypointCreator extends App{
 
   override def main(args: Array[String]): Unit = {
-    print("Creating graphs...")
+    println("Creating graphs...")
 
-    val g: Graph = new Graph(50, 50, 50)
-    val m = new Maze("src/main/resources/maze1.txt")
-    //val n1: g.Node = g.newNode(0,0)
-    //val n2: g.Node = g.newNode(1,1)
-    //n1.connectTo(n2)
-    //g.removeNode(1)
-    //g.printAdjMatrix()
+    val g: Graph = new Graph(50)
+    //println(g.checkLineOfSight(0,0,5,5))
+    //println(g.checkLineOfSight(5,5,0,0))
+    println("----")
+    //g.printLineOfSight(23,42,23,37)
+    println("----")
+
+    g.printAdjMatrix()
   }
 }
