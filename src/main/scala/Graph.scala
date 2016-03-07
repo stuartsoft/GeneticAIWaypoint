@@ -10,8 +10,10 @@ class Graph(initialNodes: Int) {
   val wid = maze.blocks.size
   val height = maze.blocks(0).size
 
-  for(i <- Range(0, initialNodes)) {
-    newRandomNode()
+  while(nodes.size < initialNodes) {
+    val n = newRandomNode()
+    if (maze.blocks(n.pos._1.toInt)(n.pos._2.toInt))
+      removeNode(n.ID)//remove the node if it spawned inside a block
   }
   connectVisibleNodes()
 
@@ -32,10 +34,8 @@ class Graph(initialNodes: Int) {
 
   def printAdjMatrix(): Unit = {
     nodes.foreach{ case (key, value) =>
-      if (value.connectedNodes.size > 0) {
-        print("\nNode " + value.ID + value.pos + " is connected to\n")
-        value.connectedNodes.foreach((mynode) => print(mynode.ID + " "))
-      }
+      print("\nNode " + value.ID + value.pos + " is connected to\n")
+      value.connectedNodes.foreach((mynode) => print(mynode.ID + " "))
     }
   }
 
@@ -162,6 +162,10 @@ class Graph(initialNodes: Int) {
     if (maze.blocks(x2.toInt)(y2.toInt)==true) return false
 
     return true
+  }
+
+  def writeToFile(fname:String): Unit ={
+    //output the graph to a file for use in unity visualizer
   }
 
 }
