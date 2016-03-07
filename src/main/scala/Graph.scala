@@ -1,5 +1,5 @@
 import scala.collection.mutable.ListBuffer
-import scala.math
+import java.io._
 /**
   * Created by BOWMANRS1 on 2/17/2016.
   */
@@ -9,6 +9,14 @@ class Graph(initialNodes: Int) {
   var maze = new Maze("src/main/resources/maze1.txt")
   val wid = maze.blocks.size
   val height = maze.blocks(0).size
+  def maxID = {
+    var topID: Int = 0
+    nodes.foreach{ case (key, value) =>
+      if (value.ID >= topID)
+        topID = value.ID
+    }
+    topID
+  }
 
   while(nodes.size < initialNodes) {
     val n = newRandomNode()
@@ -40,14 +48,9 @@ class Graph(initialNodes: Int) {
   }
 
   def newNode(x: Float, y: Float): Node = {
-    var topID: Int = 0
-    nodes.foreach{ case (key, value) =>
-      if (value.ID >= topID)
-        topID = value.ID
-    }
 
-    val res = new Node(x, y, topID+1)
-    nodes += (topID+1 -> res)//add new node to the Map
+    val res = new Node(x, y, maxID+1)
+    nodes += (maxID+1 -> res)//add new node to the Map
     res
   }
 
@@ -166,6 +169,17 @@ class Graph(initialNodes: Int) {
 
   def writeToFile(fname:String): Unit ={
     //output the graph to a file for use in unity visualizer
+    val f = new PrintWriter(new File(fname))
+    for(i<- 0 to maxID){
+      if (nodes.contains(i)){
+        val value: Node = nodes.get(i).get//force unwrap optional
+        f.write("Node: " + value.ID + " " + value.pos._1 + " " + value.pos._2 + "\n")
+        val connIDs = value.connectedNodes.map(n=>n.ID).toList;
+        connIDs.foreach{id => f.write(id.toString + " ")}
+        f.write("\n")
+      }
+    }
+    f.close()
   }
 
 }

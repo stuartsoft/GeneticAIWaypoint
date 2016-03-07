@@ -9,5 +9,6 @@ object GAWaypointCreator extends App{
 
     val g: Graph = new Graph(50)
     g.printAdjMatrix()
+    g.writeToFile("output.txt")
   }
 }
